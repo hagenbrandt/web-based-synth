@@ -1,11 +1,11 @@
-@import './settings/colors.css';
-@import './settings/spacing.css';
-@import './settings/typography.css';
-@import './settings/borders.css';
-@import './settings/shadows.css';
+@import url('./settings/colors.css');
+@import url('./settings/spacing.css');
+@import url('./settings/typography.css');
+@import url('./settings/borders.css');
+@import url('./settings/shadows.css');
 
-@import './components/panels.css';
-@import './components/sliders.css';
-@import './components/keyboard.css';
-@import './components/dropdown.css';
-@import './components/knob.css';
+@import url('./components/panels.css');
+@import url('./components/sliders.css');
+@import url('./components/keyboard.css');
+@import url('./components/dropdown.css');
+@import url('./components/knob.css');

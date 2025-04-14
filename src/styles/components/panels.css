@@ -23,12 +23,15 @@ legend {
 [data-section='osc'] {
   border-left: 4px solid var(--color-accent);
 }
+
 [data-section='filter'] {
   border-left: 4px solid #6ac6ff;
 }
+
 [data-section='env'] {
   border-left: 4px solid #c26aff;
 }
+
 [data-section='output'] {
   border-left: 4px solid #ff6a6a;
 }
