@@ -1,0 +1,18 @@
+.knob {
+  width: var(--knob-size);
+  height: var(--knob-size);
+  border-radius: 50%;
+  background: var(--knob-color);
+  box-shadow: var(--box-shadow);
+  cursor: grab;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.knob:hover,
+.knob:focus {
+  transform: scale(1.05);
+  box-shadow: 0 0 6px var(--color-accent);
+  outline: none;
+}

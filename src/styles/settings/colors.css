@@ -1,0 +1,16 @@
+:root {
+  --_white: #ffffff;
+  --_black: #111111;
+  --_gray-dark: #1b1c1e;
+  --_gray: #2a2b2d;
+  --_gray-light: #444444;
+  --_accent: #f9bc60;
+
+  --color-bg: var(--_gray-dark);
+  --color-panel: var(--_gray);
+  --color-border: var(--_gray-light);
+  --color-text: var(--_white);
+  --color-accent: var(--_accent);
+  --color-key-white: var(--_white);
+  --color-key-black: var(--_black);
+}
