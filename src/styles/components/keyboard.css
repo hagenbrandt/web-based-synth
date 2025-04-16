@@ -17,7 +17,7 @@
 
 .synth-key-white:hover,
 .synth-key-white:focus {
-  background: #ddd;
+  background: var(--gray-light);
   box-shadow: 0 0 4px var(--color-accent);
   outline: none;
 }
@@ -38,7 +38,7 @@
 
 .synth-key-black:hover,
 .synth-key-black:focus {
-  background: #333;
+  background: var(--gray-dark);
   box-shadow: 0 0 4px var(--color-accent);
   outline: none;
 }

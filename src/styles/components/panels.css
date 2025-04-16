@@ -25,13 +25,13 @@ legend {
 }
 
 [data-section='filter'] {
-  border-left: 4px solid #6ac6ff;
+  border-left: 4px solid var(--accent-blue);
 }
 
 [data-section='env'] {
-  border-left: 4px solid #c26aff;
+  border-left: 4px solid var(--accent-purple);
 }
 
 [data-section='output'] {
-  border-left: 4px solid #ff6a6a;
+  border-left: 4px solid var(--accent-red);
 }
