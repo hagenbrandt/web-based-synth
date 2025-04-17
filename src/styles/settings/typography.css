@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+:root {
+  --font-ui: 'Inter', sans-serif;
+  --font-size-base: clamp(0.875rem, 1vw, 1rem);
+  --font-size-heading: clamp(1rem, 2vw, 1.25rem);
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-base);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  margin: 0;
+  padding: var(--space-lg);
+}

@@ -1,0 +1,44 @@
+.synth-keyboard {
+  display: flex;
+  gap: 2px;
+  margin-top: var(--space-lg);
+}
+
+.synth-key-white {
+  width: 24px;
+  height: 100px;
+  background: var(--color-key-white);
+  border: 1px solid var(--color-border);
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.synth-key-white:hover,
+.synth-key-white:focus {
+  background: var(--gray-light);
+  box-shadow: 0 0 4px var(--color-accent);
+  outline: none;
+}
+
+.synth-key-black {
+  width: 16px;
+  height: 60px;
+  background: var(--color-key-black);
+  margin-left: -8px;
+  z-index: 1;
+  position: relative;
+  border: 1px solid var(--color-border);
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.synth-key-black:hover,
+.synth-key-black:focus {
+  background: var(--gray-dark);
+  box-shadow: 0 0 4px var(--color-accent);
+  outline: none;
+}

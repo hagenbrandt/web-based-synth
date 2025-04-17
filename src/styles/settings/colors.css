@@ -1,0 +1,33 @@
+:root {
+  /* Base tokens */
+  --_white: color(display-p3 1 1 1);
+  --_black: color(display-p3 0.0667 0.0667 0.0667);
+  --_gray-100: color(display-p3 0.8667 0.8667 0.8667);
+  --_gray-600: color(display-p3 0.2 0.2 0.2);
+  --_gray-900: color(display-p3 0.1059 0.1098 0.1176);
+  --_gray-800: color(display-p3 0.1647 0.1686 0.1765);
+  --_gray-700: color(display-p3 0.2667 0.2667 0.2667);
+  --_blue: color(display-p3 0.4157 0.7765 1);
+  --_purple: color(display-p3 0.7608 0.4157 1);
+  --_red: color(display-p3 1 0.4157 0.4157);
+  --_saffron-mango: color(display-p3 0.9765 0.7373 0.3765);
+
+  /* Accent family (section colors) */
+  --accent-blue: var(--_blue);
+  --accent-purple: var(--_purple);
+  --accent-red: var(--_red);
+
+  /* UI colors */
+  --color-bg: var(--_gray-900);
+  --color-panel: var(--_gray-800);
+  --color-border: var(--_gray-700);
+  --color-text: var(--_white);
+  --color-accent: var(--_saffron-mango);
+
+  --color-key-white: var(--_white);
+  --color-key-black: var(--_black);
+
+  /* Additional UI tones (for interactions or accents) */
+  --color-hover-light: var(--_gray-100);
+  --color-hover-dark: var(--_gray-600);
+}
