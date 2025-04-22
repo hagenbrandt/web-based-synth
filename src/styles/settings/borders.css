@@ -1,3 +1,4 @@
 :root {
-  --border-radius: 6px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
 }
