@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useMidiInput } from '../hooks/useMidiInput';
 
 const WHITE_MIDI_NOTES = [
   60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79, 81, 83,
@@ -7,7 +8,7 @@ const BLACK_MIDI_NOTES = [61, 63, 66, 68, 70, 73, 75, 78, 80, 82] as const;
 
 type WhiteNote = (typeof WHITE_MIDI_NOTES)[number];
 type BlackNote = (typeof BLACK_MIDI_NOTES)[number];
-type MidiNote = WhiteNote | BlackNote;
+export type MidiNote = WhiteNote | BlackNote;
 
 const noteLabels: Record<MidiNote, string> = {
   60: 'C4',
@@ -89,6 +90,7 @@ export const PianoKeyboard = ({ onNoteDown, onNoteUp }: PianoKeyboardProps) => {
   const handleNoteDown = useCallback(
     (note: number) => {
       setActiveNotes((prev) => new Set(prev).add(note));
+
       onNoteDown?.(note);
     },
     [onNoteDown]
@@ -105,6 +107,12 @@ export const PianoKeyboard = ({ onNoteDown, onNoteUp }: PianoKeyboardProps) => {
     },
     [onNoteUp]
   );
+
+  useMidiInput({
+    onNoteDown: handleNoteDown,
+    onNoteUp: handleNoteUp,
+    range: [...WHITE_MIDI_NOTES, ...BLACK_MIDI_NOTES],
+  });
 
   const isBlackMidiNote = (
     note: number
