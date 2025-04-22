@@ -9,3 +9,29 @@
 @import url('./components/keyboard.css');
 @import url('./components/dropdown.css');
 @import url('./components/knob.css');
+
+html,
+body,
+#root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--color-bg, #111);
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.synth-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) {
+  .synth-wrapper {
+    transform: rotate(-90deg) translateX(-100%);
+    transform-origin: top left;
+    width: 100vh;
+    height: 100vw;
+  }
+}
