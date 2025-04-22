@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useMidiInput } from '../hooks/useMidiInput';
+import { useMidiActivity } from '../hooks/useMidiActivity';
 
 const WHITE_MIDI_NOTES = [
   60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79, 81, 83,
@@ -86,6 +87,7 @@ const ButtonKeyComponent = ({
 
 export const PianoKeyboard = ({ onNoteDown, onNoteUp }: PianoKeyboardProps) => {
   const [activeNotes, setActiveNotes] = useState<Set<number>>(new Set());
+  const { midiActive, triggerMidiActivity } = useMidiActivity();
 
   const handleNoteDown = useCallback(
     (note: number) => {
@@ -111,6 +113,7 @@ export const PianoKeyboard = ({ onNoteDown, onNoteUp }: PianoKeyboardProps) => {
   useMidiInput({
     onNoteDown: handleNoteDown,
     onNoteUp: handleNoteUp,
+    onActivity: triggerMidiActivity,
     range: [...WHITE_MIDI_NOTES, ...BLACK_MIDI_NOTES],
   });
 
@@ -121,41 +124,46 @@ export const PianoKeyboard = ({ onNoteDown, onNoteUp }: PianoKeyboardProps) => {
   };
 
   return (
-    <div className="synth-keyboard">
-      {WHITE_MIDI_NOTES.map((whiteNote) => {
-        const active = activeNotes.has(whiteNote);
-        const label = noteLabels[whiteNote] || `MIDI ${whiteNote}`;
+    <div className="keyboard-wrapper">
+      <div className="keyboard-side-panel">
+        <div className={`midi-indicator ${midiActive ? 'on' : ''}`} />
+      </div>
+      <div className="synth-keyboard">
+        {WHITE_MIDI_NOTES.map((whiteNote) => {
+          const active = activeNotes.has(whiteNote);
+          const label = noteLabels[whiteNote] || `MIDI ${whiteNote}`;
 
-        const hasSharp = [60, 62, 65, 67, 69, 72, 74, 77, 79, 81].includes(
-          whiteNote
-        );
-        const blackNote = whiteNote + 1;
-        const showBlack = isBlackMidiNote(blackNote);
+          const hasSharp = [60, 62, 65, 67, 69, 72, 74, 77, 79, 81].includes(
+            whiteNote
+          );
+          const blackNote = whiteNote + 1;
+          const showBlack = isBlackMidiNote(blackNote);
 
-        return (
-          <div key={whiteNote} className="key-group">
-            <ButtonKeyComponent
-              note={whiteNote}
-              type="white"
-              active={active}
-              label={label}
-              onNoteDown={handleNoteDown}
-              onNoteUp={handleNoteUp}
-            />
-
-            {hasSharp && showBlack ? (
+          return (
+            <div key={whiteNote} className="key-group">
               <ButtonKeyComponent
-                note={blackNote}
-                type="black"
-                active={activeNotes.has(blackNote)}
-                label={noteLabels[blackNote]}
+                note={whiteNote}
+                type="white"
+                active={active}
+                label={label}
                 onNoteDown={handleNoteDown}
                 onNoteUp={handleNoteUp}
               />
-            ) : null}
-          </div>
-        );
-      })}
+
+              {hasSharp && showBlack ? (
+                <ButtonKeyComponent
+                  note={blackNote}
+                  type="black"
+                  active={activeNotes.has(blackNote)}
+                  label={noteLabels[blackNote]}
+                  onNoteDown={handleNoteDown}
+                  onNoteUp={handleNoteUp}
+                />
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
