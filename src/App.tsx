@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 import { PianoKeyboard } from './components/keyboard';
 import {
@@ -11,6 +11,11 @@ const synth = new Tone.Synth().toDestination();
 
 function App() {
   const [oscType, setOscType] = useState<OscType>('sine');
+  const [oscFreqOffset, setOscFreqOffset] = useState<number>(0);
+
+  useEffect(() => {
+    synth.detune.value = oscFreqOffset * 100;
+  }, [oscFreqOffset]);
 
   const handleNoteDown = async (note: number) => {
     await Tone.start();
@@ -26,7 +31,12 @@ function App() {
 
   return (
     <div className="synth-wrapper">
-      <OscillatorSection oscType={oscType} setOscType={setOscType} />
+      <OscillatorSection
+        oscType={oscType}
+        oscFreqOffset={oscFreqOffset}
+        setOscType={setOscType}
+        setOscFreqOffset={setOscFreqOffset}
+      />
       <PianoKeyboard onNoteDown={handleNoteDown} onNoteUp={handleNoteUp} />
     </div>
   );
