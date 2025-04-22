@@ -1,11 +1,17 @@
+import { Knob } from './knob';
+
 export type OscType = 'sine' | 'triangle' | 'sawtooth' | 'square';
 
 export const OscillatorSection = ({
   oscType,
+  oscFreqOffset,
   setOscType,
+  setOscFreqOffset,
 }: {
   oscType: OscType;
+  oscFreqOffset: number;
   setOscType: (type: OscType) => void;
+  setOscFreqOffset: (value: number) => void;
 }) => {
   return (
     <section className="osc-section">
@@ -26,6 +32,17 @@ export const OscillatorSection = ({
           <option value="sawtooth">Sawtooth</option>
           <option value="square">Square</option>
         </select>
+      </div>
+      <label>Frequency</label>
+      <Knob
+        value={oscFreqOffset}
+        min={-24}
+        max={24}
+        onChange={setOscFreqOffset}
+      />
+      <div className="knob-value">
+        {oscFreqOffset >= 0 ? '+' : ''}
+        {oscFreqOffset} st
       </div>
     </section>
   );
