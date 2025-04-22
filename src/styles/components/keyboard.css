@@ -4,9 +4,29 @@
   --synth-key-black-width: 28px;
   --synth-key-black-height: 100px;
 }
-.synth-wrapper {
+
+.keyboard-wrapper {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: flex-end;
+  background: linear-gradient(to bottom, #1a1b1d, #121314);
+  border-radius: var(--radius-lg, 16px);
+  box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.04),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+  gap: 0;
+  padding: 16px 20px;
+  margin-top: auto;
+  margin-bottom: var(--space-lg);
+}
+
+.keyboard-side-panel {
   display: flex;
+  align-items: center;
   justify-content: center;
+  width: 48px;
+  padding: var(--space-sm, 0.5rem);
 }
 
 .synth-keyboard {
@@ -14,7 +34,6 @@
   flex-direction: row;
   align-items: flex-end;
   position: relative;
-  padding: 20px;
 }
 
 .key-group {
@@ -53,10 +72,15 @@ button {
 }
 
 .synth-key-white:hover,
-.synth-key-white:focus {
+.synth-key-white:focus,
+.synth-key-white.active,
+.synth-key-white[aria-pressed='true'] {
   background: var(--color-hover-light);
   box-shadow: 0 0 4px var(--color-accent);
   outline: none;
+  box-shadow:
+    inset 0 -2px 4px rgba(0, 0, 0, 0.4),
+    inset 0 6px 8px rgba(255, 255, 255, 0.05);
 }
 
 .synth-key-black {
@@ -79,22 +103,27 @@ button {
 }
 
 .synth-key-black:hover,
-.synth-key-black:focus {
+.synth-key-black:focus,
+.synth-key-black.active,
+.synth-key-black[aria-pressed='true'] {
   background: var(--color-hover-dark);
   box-shadow: 0 0 4px var(--color-accent);
   outline: none;
-}
-
-.synth-key-white.active,
-.synth-key-white[aria-pressed='true'] {
-  box-shadow:
-    inset 0 -2px 4px rgba(0, 0, 0, 0.4),
-    inset 0 6px 8px rgba(255, 255, 255, 0.05);
-}
-
-.synth-key-black.active,
-.synth-key-black[aria-pressed='true'] {
   box-shadow:
     inset 0 -2px 4px rgba(0, 0, 0, 0.6),
     inset 0 6px 8px rgba(255, 255, 255, 0.05);
+}
+
+.midi-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-border);
+  box-shadow: 0 0 4px transparent;
+  transition: all 0.2s ease-out;
+}
+
+.midi-indicator.on {
+  background: var(--color-midi-active);
+  box-shadow: 0 0 8px var(--color-midi-active);
 }
