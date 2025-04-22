@@ -1,35 +1,77 @@
+:root {
+  --synth-key-white-width: 40px;
+  --synth-key-white-height: 160px;
+  --synth-key-black-width: 28px;
+  --synth-key-black-height: 100px;
+}
+.synth-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
 .synth-keyboard {
   display: flex;
-  gap: 2px;
-  margin-top: var(--space-lg);
+  flex-direction: row;
+  align-items: flex-end;
+  position: relative;
+  padding: 20px;
+}
+
+.key-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+button {
+  all: unset;
+  display: inline-block;
 }
 
 .synth-key-white {
-  width: 24px;
-  height: 100px;
+  width: var(--synth-key-white-width);
+  height: var(--synth-key-white-height);
   background: var(--color-key-white);
   border: 1px solid var(--color-border);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  box-shadow:
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 6px 8px rgba(255, 255, 255, 0.15);
   transition:
     background 0.2s,
     box-shadow 0.2s;
   cursor: pointer;
 }
 
+.key-group:first-child .synth-key-white {
+  border-top-left-radius: var(--radius-sm);
+}
+
+.key-group:last-child .synth-key-white {
+  border-top-right-radius: var(--radius-sm);
+}
+
 .synth-key-white:hover,
 .synth-key-white:focus {
-  background: var(--gray-light);
+  background: var(--color-hover-light);
   box-shadow: 0 0 4px var(--color-accent);
   outline: none;
 }
 
 .synth-key-black {
-  width: 16px;
-  height: 60px;
+  position: absolute;
+  top: 0;
+  left: 60%;
+  width: var(--synth-key-black-width);
+  height: var(--synth-key-black-height);
   background: var(--color-key-black);
-  margin-left: -8px;
-  z-index: 1;
-  position: relative;
   border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  box-shadow:
+    inset 0 -2px 4px rgba(0, 0, 0, 0.5),
+    inset 0 6px 8px rgba(255, 255, 255, 0.08);
+  z-index: 2;
   transition:
     background 0.2s,
     box-shadow 0.2s;
@@ -38,7 +80,21 @@
 
 .synth-key-black:hover,
 .synth-key-black:focus {
-  background: var(--gray-dark);
+  background: var(--color-hover-dark);
   box-shadow: 0 0 4px var(--color-accent);
   outline: none;
+}
+
+.synth-key-white.active,
+.synth-key-white[aria-pressed='true'] {
+  box-shadow:
+    inset 0 -2px 4px rgba(0, 0, 0, 0.4),
+    inset 0 6px 8px rgba(255, 255, 255, 0.05);
+}
+
+.synth-key-black.active,
+.synth-key-black[aria-pressed='true'] {
+  box-shadow:
+    inset 0 -2px 4px rgba(0, 0, 0, 0.6),
+    inset 0 6px 8px rgba(255, 255, 255, 0.05);
 }
