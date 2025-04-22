@@ -1,8 +1,8 @@
 :root {
-  --synth-key-white-width: 40px;
-  --synth-key-white-height: 160px;
-  --synth-key-black-width: 28px;
-  --synth-key-black-height: 100px;
+  --synth-key-white-width: clamp(28px, 6vw, 40px);
+  --synth-key-white-height: clamp(100px, 20vh, 160px);
+  --synth-key-black-width: clamp(18px, 4vw, 28px);
+  --synth-key-black-height: calc(var(--synth-key-white-height) * 0.625);
 }
 
 .keyboard-wrapper {
@@ -17,8 +17,7 @@
     0 4px 12px rgba(0, 0, 0, 0.3);
   gap: 0;
   padding: 16px 20px;
-  margin-top: auto;
-  margin-bottom: var(--space-lg);
+  width: fit-content;
 }
 
 .keyboard-side-panel {
