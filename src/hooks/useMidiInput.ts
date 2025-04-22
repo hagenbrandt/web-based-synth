@@ -5,12 +5,14 @@ import { type MidiNote } from '../components/keyboard';
 type UseMidiInputProps = {
   onNoteDown: (note: MidiNote, velocity?: number) => void;
   onNoteUp: (note: MidiNote) => void;
+  onActivity?: () => void;
   range?: number[];
 };
 
 export function useMidiInput({
   onNoteDown,
   onNoteUp,
+  onActivity,
   range,
 }: UseMidiInputProps) {
   useEffect(() => {
@@ -26,6 +28,10 @@ export function useMidiInput({
             const [status, note, velocity] = message.data;
             const command = status & 0xf0;
             const isNoteInRange = range ? range.includes(note) : true;
+
+            if (onActivity) {
+              onActivity();
+            }
 
             if (!isNoteInRange) {
               return;
@@ -45,5 +51,5 @@ export function useMidiInput({
       .catch((err) => {
         console.error('Failed to access MIDI devices:', err);
       });
-  }, [onNoteDown, onNoteUp, range]);
+  }, [onActivity, onNoteDown, onNoteUp, range]);
 }
