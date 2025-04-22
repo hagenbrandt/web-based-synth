@@ -19,9 +19,9 @@
 
   /* UI colors */
   --color-bg: var(--_gray-900);
-  --color-panel: var(--_gray-800);
+  --color-panel: var(--_gray-900);
   --color-border: var(--_gray-700);
-  --color-text: var(--_white);
+  --color-text: color(display-p3 0.541176 0.564706 0.596078 / 1);
   --color-accent: var(--_saffron-mango);
 
   --color-key-white: var(--_white);
