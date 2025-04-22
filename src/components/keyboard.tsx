@@ -41,7 +41,49 @@ type PianoKeyboardProps = {
   readonly onNoteUp?: (note: number) => void;
 };
 
-export function PianoKeyboard({ onNoteDown, onNoteUp }: PianoKeyboardProps) {
+const ButtonKeyComponent = ({
+  note,
+  type,
+  active,
+  label,
+  onNoteDown,
+  onNoteUp,
+}: {
+  readonly note: MidiNote;
+  readonly type: 'white' | 'black';
+  readonly active: boolean;
+  readonly label: string;
+  readonly onNoteDown: (note: MidiNote) => void;
+  readonly onNoteUp: (note: MidiNote) => void;
+}) => {
+  const handlePointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
+    onNoteUp(note);
+    e.currentTarget.blur();
+  };
+
+  const handlePointerLeave = (e: React.PointerEvent<HTMLButtonElement>) => {
+    onNoteUp(note);
+    e.currentTarget.blur();
+  };
+
+  return (
+    <button
+      className={`synth-key-${type} ${active ? 'active' : ''}`}
+      aria-pressed={active}
+      aria-label={label}
+      onMouseDown={() => onNoteDown(note)}
+      onMouseUp={() => onNoteUp(note)}
+      onMouseLeave={() => onNoteUp(note)}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerLeave}
+      onTouchStart={() => onNoteDown(note)}
+      onTouchEnd={() => onNoteUp(note)}
+      data-note={note}
+    />
+  );
+};
+
+export const PianoKeyboard = ({ onNoteDown, onNoteUp }: PianoKeyboardProps) => {
   const [activeNotes, setActiveNotes] = useState<Set<number>>(new Set());
 
   const handleNoteDown = useCallback(
@@ -64,27 +106,11 @@ export function PianoKeyboard({ onNoteDown, onNoteUp }: PianoKeyboardProps) {
     [onNoteUp]
   );
 
-  const handlePointerUp = (
-    note: number,
-    e: React.PointerEvent<HTMLButtonElement>
-  ) => {
-    handleNoteUp(note);
-    e.currentTarget.blur();
-  };
-
-  const handlePointerLeave = (
-    note: number,
-    e: React.PointerEvent<HTMLButtonElement>
-  ) => {
-    handleNoteUp(note);
-    e.currentTarget.blur();
-  };
-
-  function isBlackMidiNote(
+  const isBlackMidiNote = (
     note: number
-  ): note is (typeof BLACK_MIDI_NOTES)[number] {
+  ): note is (typeof BLACK_MIDI_NOTES)[number] => {
     return BLACK_MIDI_NOTES.includes(note as BlackNote);
-  }
+  };
 
   return (
     <div className="synth-keyboard">
@@ -100,38 +126,28 @@ export function PianoKeyboard({ onNoteDown, onNoteUp }: PianoKeyboardProps) {
 
         return (
           <div key={whiteNote} className="key-group">
-            <button
-              className={`synth-key-white ${active ? 'active' : ''}`}
-              aria-pressed={active}
-              aria-label={label}
-              onMouseDown={() => handleNoteDown(whiteNote)}
-              onMouseUp={() => handleNoteUp(whiteNote)}
-              onMouseLeave={() => handleNoteUp(whiteNote)}
-              onPointerUp={(e) => handlePointerUp(blackNote, e)}
-              onPointerLeave={(e) => handlePointerLeave(whiteNote, e)}
-              onTouchStart={() => handleNoteDown(whiteNote)}
-              onTouchEnd={() => handleNoteUp(whiteNote)}
-              data-note={whiteNote}
+            <ButtonKeyComponent
+              note={whiteNote}
+              type="white"
+              active={active}
+              label={label}
+              onNoteDown={handleNoteDown}
+              onNoteUp={handleNoteUp}
             />
 
-            {hasSharp && showBlack && (
-              <button
-                className={`synth-key-black ${activeNotes.has(blackNote) ? 'active' : ''}`}
-                aria-pressed={activeNotes.has(blackNote)}
-                aria-label={noteLabels[blackNote] || `MIDI ${blackNote}`}
-                onMouseDown={() => handleNoteDown(blackNote)}
-                onMouseUp={() => handleNoteUp(blackNote)}
-                onMouseLeave={() => handleNoteUp(blackNote)}
-                onPointerUp={(e) => handlePointerUp(blackNote, e)}
-                onPointerLeave={(e) => handlePointerLeave(blackNote, e)}
-                onTouchStart={() => handleNoteDown(blackNote)}
-                onTouchEnd={() => handleNoteUp(blackNote)}
-                data-note={blackNote}
+            {hasSharp && showBlack ? (
+              <ButtonKeyComponent
+                note={blackNote}
+                type="black"
+                active={activeNotes.has(blackNote)}
+                label={noteLabels[blackNote]}
+                onNoteDown={handleNoteDown}
+                onNoteUp={handleNoteUp}
               />
-            )}
+            ) : null}
           </div>
         );
       })}
     </div>
   );
-}
+};
