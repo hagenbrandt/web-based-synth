@@ -2,15 +2,17 @@ import { useEffect } from 'react';
 
 import { type MidiNote } from '../components/keyboard';
 
+type UseMidiInputProps = {
+  onNoteDown: (note: MidiNote, velocity?: number) => void;
+  onNoteUp: (note: MidiNote) => void;
+  range?: number[];
+};
+
 export function useMidiInput({
   onNoteDown,
   onNoteUp,
   range,
-}: {
-  onNoteDown: (note: number) => void;
-  onNoteUp: (note: number) => void;
-  range?: number[];
-}) {
+}: UseMidiInputProps) {
   useEffect(() => {
     if (!navigator.requestMIDIAccess) return;
 
@@ -25,7 +27,11 @@ export function useMidiInput({
             const command = status & 0xf0;
             const isNoteInRange = range ? range.includes(note) : true;
 
-            if (command === 0x90 && velocity > 0 && isNoteInRange) {
+            if (!isNoteInRange) {
+              return;
+            }
+
+            if (command === 0x90 && velocity > 0) {
               onNoteDown(note as MidiNote);
             } else if (
               command === 0x80 ||
