@@ -1,0 +1,16 @@
+.output-panel {
+  width: 25%;
+}
+
+.volume-control {
+  margin: auto 0 var(--space-md) 0;
+}
+
+.volume-control-label {
+  display: block;
+  margin: var(--space-md) 0;
+}
+
+.module-section.output-panel .knob-line {
+  background: var(--color-accent);
+}
