@@ -29,7 +29,7 @@ type EnvelopeItem = {
   accent: string;
 };
 
-export function EnvelopeSection({
+export const EnvelopeSection = ({
   attack,
   decay,
   sustain,
@@ -39,7 +39,7 @@ export function EnvelopeSection({
   setSustain,
   setRelease,
   onEnvelopeChange,
-}: Props) {
+}: Props) => {
   useEffect(() => {
     onEnvelopeChange({ attack, decay, sustain, release });
   }, [attack, decay, sustain, release, onEnvelopeChange]);
@@ -105,4 +105,4 @@ export function EnvelopeSection({
       </div>
     </section>
   );
-}
+};

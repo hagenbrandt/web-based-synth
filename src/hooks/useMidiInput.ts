@@ -9,12 +9,12 @@ type UseMidiInputProps = {
   range?: number[];
 };
 
-export function useMidiInput({
+export const useMidiInput = ({
   onNoteDown,
   onNoteUp,
   onActivity,
   range,
-}: UseMidiInputProps) {
+}: UseMidiInputProps) => {
   useEffect(() => {
     if (!navigator.requestMIDIAccess) return;
 
@@ -52,4 +52,4 @@ export function useMidiInput({
         console.error('Failed to access MIDI devices:', err);
       });
   }, [onActivity, onNoteDown, onNoteUp, range]);
-}
+};

@@ -42,8 +42,9 @@ export const OscillatorSection = ({
           <option value="square">Square</option>
         </select>
       </div>
-      <label>Frequency</label>
+      <label htmlFor="frequency">Frequency</label>
       <Knob
+        id="frequency"
         value={oscFreqOffset}
         min={-4.5}
         max={4.5}

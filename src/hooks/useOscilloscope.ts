@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import * as Tone from 'tone';
 
-export function useOscilloscope(
+export const useOscilloscope = (
   analyser: Tone.Analyser
-): React.RefObject<Float32Array> {
+): React.RefObject<Float32Array> => {
   const waveformRef = useRef<Float32Array>(new Float32Array(analyser.size));
 
   useEffect(() => {
@@ -27,4 +27,4 @@ export function useOscilloscope(
   }, [analyser]);
 
   return waveformRef;
-}
+};
