@@ -14,11 +14,13 @@ import {
   initAudioContext,
   playMidiNote,
   stopNote,
+  setVolume,
 } from './lib/audio-engine';
 import { Envelope, EnvelopeSection } from './components/envelope-section';
 import { Oscilloscope } from './components/oscilloscope';
 import { useOscilloscope } from './hooks/useOscilloscope';
 import { Toggle } from './components/toggle';
+import { Output } from './components/output-sections';
 
 const handleFilterChange = (cutoff: number, q: number) => {
   filter.frequency.value = cutoff;
@@ -41,11 +43,16 @@ const App = () => {
   const [showOscScope, setShowOscScope] = useState<boolean>(false);
   const oscWave = useOscilloscope(oscAnalyser);
   const outWave = useOscilloscope(outputAnalyser);
+  const [volume, setVol] = useState(-6);
 
   useEffect(() => {
     synth.oscillator.type = oscType;
     synth.detune.value = oscFreqOffset * 100;
   }, [oscType, oscFreqOffset]);
+
+  useEffect(() => {
+    setVolume(volume);
+  }, [volume]);
 
   const handleNoteDown = async (note: number) => {
     await initAudioContext();
@@ -80,17 +87,20 @@ const App = () => {
           />
         </div>
         <div className="vertical-wrapper vertical-wrapper-full-width">
-          <EnvelopeSection
-            attack={attack}
-            decay={decay}
-            sustain={sustain}
-            release={release}
-            setAttack={setAttack}
-            setDecay={setDecay}
-            setSustain={setSustain}
-            setRelease={setRelease}
-            onEnvelopeChange={handleEnvelopeChange}
-          />
+          <div className="horizontal-wrapper">
+            <EnvelopeSection
+              attack={attack}
+              decay={decay}
+              sustain={sustain}
+              release={release}
+              setAttack={setAttack}
+              setDecay={setDecay}
+              setSustain={setSustain}
+              setRelease={setRelease}
+              onEnvelopeChange={handleEnvelopeChange}
+            />
+            <Output volume={volume} onSetVolume={setVol} />
+          </div>
           <section className="module-section oscilloscope-section accent-purple">
             <Toggle
               labelLeft="OSC"
