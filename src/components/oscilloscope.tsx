@@ -38,13 +38,13 @@ export const Oscilloscope = ({ waveformRef, label }: OscilloscopeProps) => {
         .append('rect')
         .attr('width', width)
         .attr('height', height)
-        .attr('fill', '#111');
+        .attr('fill', 'var(--color-panel)');
 
       svg
         .append('path')
         .datum(Array.from(waveform))
         .attr('fill', 'none')
-        .attr('stroke', 'orange')
+        .attr('stroke', 'var(--color-accent)')
         .attr('stroke-width', 1.5)
         .attr('d', lineGen);
 
@@ -53,7 +53,7 @@ export const Oscilloscope = ({ waveformRef, label }: OscilloscopeProps) => {
           .append('text')
           .attr('x', 10)
           .attr('y', 15)
-          .attr('fill', 'lightgray')
+          .attr('fill', 'var(--color-text)')
           .attr('font-size', '12px')
           .text(label);
       }

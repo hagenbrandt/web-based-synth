@@ -91,7 +91,7 @@ const App = () => {
             setRelease={setRelease}
             onEnvelopeChange={handleEnvelopeChange}
           />
-          <section className="module-section oscilloscope-section">
+          <section className="module-section oscilloscope-section accent-purple">
             <Toggle
               labelLeft="OSC"
               labelRight="Mix"
