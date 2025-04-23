@@ -9,3 +9,15 @@
   white-space: nowrap;
   border-width: 0;
 }
+
+.accent-blue {
+  --color-accent: var(--accent-blue);
+}
+
+.accent-purple {
+  --color-accent: var(--accent-purple);
+}
+
+.accent-red {
+  --color-accent: var(--accent-red);
+}
