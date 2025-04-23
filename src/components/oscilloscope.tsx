@@ -13,8 +13,9 @@ export const Oscilloscope = ({ waveformRef, label }: OscilloscopeProps) => {
 
   useEffect(() => {
     const svg = select(svgRef.current);
-    const width = 300;
-    const height = 100;
+
+    const width = svgRef.current?.getBoundingClientRect().width || 300;
+    const height = svgRef.current?.getBoundingClientRect().height || 200;
 
     const xScale = scaleLinear()
       .domain([0, waveformRef.current.length])
@@ -65,5 +66,5 @@ export const Oscilloscope = ({ waveformRef, label }: OscilloscopeProps) => {
     return () => cancelAnimationFrame(animationId);
   }, [waveformRef, label]);
 
-  return <svg ref={svgRef} width={300} height={100} />;
+  return <svg className="oscilloscope" ref={svgRef} />;
 };

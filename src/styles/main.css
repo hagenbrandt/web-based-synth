@@ -8,9 +8,11 @@
 @import url('./components/panels.css');
 @import url('./components/keyboard.css');
 @import url('./components/knob.css');
+@import url('./components/toggle.css');
 @import url('./components/osc-section.css');
 @import url('./components/filter-section.css');
 @import url('./components/envelope-section.css');
+@import url('./components/oscilloscope-section.css');
 
 html,
 body,
@@ -59,4 +61,9 @@ body,
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
+  width: fit-content;
+}
+
+.vertical-wrapper-full-width {
+  width: 100%;
 }
