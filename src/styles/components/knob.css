@@ -57,3 +57,9 @@
   margin-top: 6px;
   box-shadow: 0 0 1px rgba(255, 255, 255, 0.2);
 }
+
+.knob-value {
+  font-size: 0.8rem;
+  color: var(--color-text);
+  margin-top: 0.25rem;
+}
