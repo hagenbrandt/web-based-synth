@@ -10,6 +10,7 @@
 @import url('./components/keyboard.css');
 @import url('./components/knob.css');
 @import url('./components/osc-section.css');
+@import url('./components/filter-section.css');
 
 html,
 body,

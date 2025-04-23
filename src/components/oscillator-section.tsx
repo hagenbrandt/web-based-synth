@@ -14,8 +14,8 @@ export const OscillatorSection = ({
   setOscFreqOffset: (value: number) => void;
 }) => {
   return (
-    <section className="osc-section">
-      <h2 className="osc-section-title">Oscillator</h2>
+    <section className="module-section osc-section">
+      <h2 className="module-section-title">Oscillator</h2>
 
       <div className="osc-control">
         <label className="sr-only" htmlFor="osc-type">
