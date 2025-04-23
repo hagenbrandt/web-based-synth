@@ -13,6 +13,7 @@
 @import url('./components/filter-section.css');
 @import url('./components/envelope-section.css');
 @import url('./components/oscilloscope-section.css');
+@import url('./components/output-section.css');
 
 html,
 body,
@@ -66,4 +67,9 @@ body,
 
 .vertical-wrapper-full-width {
   width: 100%;
+}
+
+.horizontal-wrapper {
+  display: flex;
+  flex-direction: row;
 }
