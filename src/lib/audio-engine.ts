@@ -21,20 +21,27 @@ export const synth = new Tone.Synth({
   },
 });
 
+export const volume = new Tone.Volume(0);
+
 synth.connect(oscAnalyser);
 oscAnalyser.connect(filter);
 filter.connect(outputAnalyser);
-outputAnalyser.toDestination();
+outputAnalyser.connect(volume);
+volume.toDestination();
 
 export const initAudioContext = async () => {
   await Tone.start();
 };
 
-export const playMidiNote = (note: number) => {
+export const playMidiNote = (note: number, rate = 1) => {
   const freq = Tone.Frequency(note, 'midi').toFrequency();
-  synth.triggerAttack(freq);
+  synth.triggerAttack(freq, rate);
 };
 
 export const stopNote = () => {
   synth.triggerRelease();
+};
+
+export const setVolume = (value: number) => {
+  volume.volume.value = value; // value in dB
 };
