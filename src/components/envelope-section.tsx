@@ -85,7 +85,7 @@ export function EnvelopeSection({
 
   return (
     <section className="module-section envelope-section">
-      <h2 className="synth-section-title">Envelope</h2>
+      <h2 className="module-section-title">Envelope</h2>
       <div className="envelope-sliders">
         {envItems.map(({ accent, label, value, set, min, max, step }) => (
           <div className={`slider-control ${accent}`} key={label}>

@@ -1,0 +1,13 @@
+.oscilloscope {
+  border-radius: var(--radius-md);
+  box-shadow:
+    14px 14px 21px #191b1d,
+    -14px -14px 21px #1b1d20;
+  width: 100%;
+  height: 100%;
+}
+
+.oscilloscope-section {
+  height: 100%;
+  width: auto;
+}
