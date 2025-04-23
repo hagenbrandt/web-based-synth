@@ -7,6 +7,8 @@ import {
 import { FilterSection } from './components/filter-section';
 import './styles/main.css';
 import {
+  oscAnalyser,
+  outputAnalyser,
   synth,
   filter,
   initAudioContext,
@@ -14,6 +16,9 @@ import {
   stopNote,
 } from './lib/audio-engine';
 import { Envelope, EnvelopeSection } from './components/envelope-section';
+import { Oscilloscope } from './components/oscilloscope';
+import { useOscilloscope } from './hooks/useOscilloscope';
+import { Toggle } from './components/toggle';
 
 const handleFilterChange = (cutoff: number, q: number) => {
   filter.frequency.value = cutoff;
@@ -21,10 +26,7 @@ const handleFilterChange = (cutoff: number, q: number) => {
 };
 
 const handleEnvelopeChange = (env: Envelope) => {
-  synth.envelope.attack = env.attack;
-  synth.envelope.decay = env.decay;
-  synth.envelope.sustain = env.sustain;
-  synth.envelope.release = env.release;
+  synth.set({ envelope: env });
 };
 
 const App = () => {
@@ -36,6 +38,9 @@ const App = () => {
   const [decay, setDecay] = useState(0.2);
   const [sustain, setSustain] = useState(0.5);
   const [release, setRelease] = useState(0.3);
+  const [showOscScope, setShowOscScope] = useState<boolean>(false);
+  const oscWave = useOscilloscope(oscAnalyser);
+  const outWave = useOscilloscope(outputAnalyser);
 
   useEffect(() => {
     synth.oscillator.type = oscType;
@@ -54,8 +59,6 @@ const App = () => {
   const handleDetuneChange = (detuneCents: number) => {
     synth.detune.value = detuneCents;
   };
-
-  synth.oscillator.type = oscType;
 
   return (
     <div className="synth-wrapper">
@@ -76,17 +79,32 @@ const App = () => {
             onFilterChange={handleFilterChange}
           />
         </div>
-        <EnvelopeSection
-          attack={attack}
-          decay={decay}
-          sustain={sustain}
-          release={release}
-          setAttack={setAttack}
-          setDecay={setDecay}
-          setSustain={setSustain}
-          setRelease={setRelease}
-          onEnvelopeChange={handleEnvelopeChange}
-        />
+        <div className="vertical-wrapper vertical-wrapper-full-width">
+          <EnvelopeSection
+            attack={attack}
+            decay={decay}
+            sustain={sustain}
+            release={release}
+            setAttack={setAttack}
+            setDecay={setDecay}
+            setSustain={setSustain}
+            setRelease={setRelease}
+            onEnvelopeChange={handleEnvelopeChange}
+          />
+          <section className="module-section oscilloscope-section">
+            <Toggle
+              labelLeft="OSC"
+              labelRight="Mix"
+              value={showOscScope ? 'osc' : 'mix'}
+              onChange={() => setShowOscScope(!showOscScope)}
+            />
+            {showOscScope ? (
+              <Oscilloscope waveformRef={oscWave} label="Oscillator" />
+            ) : (
+              <Oscilloscope waveformRef={outWave} label="Mix" />
+            )}
+          </section>
+        </div>
       </div>
       <PianoKeyboard onNoteDown={handleNoteDown} onNoteUp={handleNoteUp} />
     </div>
