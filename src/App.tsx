@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import * as Tone from 'tone';
 import { PianoKeyboard } from './components/keyboard';
 import {
   OscillatorSection,
@@ -7,7 +6,13 @@ import {
 } from './components/oscillator-section';
 import { FilterSection } from './components/filter-section';
 import './styles/main.css';
-import { synth, filter } from './lib/audio-engine';
+import {
+  synth,
+  filter,
+  initAudioContext,
+  playMidiNote,
+  stopNote,
+} from './lib/audio-engine';
 
 const handleFilterChange = (cutoff: number, q: number) => {
   filter.frequency.value = cutoff;
@@ -26,13 +31,12 @@ const App = () => {
   }, [oscType, oscFreqOffset]);
 
   const handleNoteDown = async (note: number) => {
-    await Tone.start();
-    const freq = Tone.Frequency(note, 'midi').toFrequency();
-    synth.triggerAttack(freq);
+    await initAudioContext();
+    playMidiNote(note);
   };
 
   const handleNoteUp = () => {
-    synth.triggerRelease();
+    stopNote();
   };
 
   const handleDetuneChange = (detuneCents: number) => {
