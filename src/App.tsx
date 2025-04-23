@@ -35,6 +35,10 @@ const App = () => {
     synth.triggerRelease();
   };
 
+  const handleDetuneChange = (detuneCents: number) => {
+    synth.detune.value = detuneCents;
+  };
+
   synth.oscillator.type = oscType;
 
   return (
@@ -44,6 +48,7 @@ const App = () => {
         oscFreqOffset={oscFreqOffset}
         setOscType={setOscType}
         setOscFreqOffset={setOscFreqOffset}
+        onDetuneChange={handleDetuneChange}
       />
       <FilterSection
         cutoff={cutoff}
