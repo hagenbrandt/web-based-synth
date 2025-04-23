@@ -42,6 +42,7 @@ export const FilterSection = ({
         <div className="synth-control">
           <label htmlFor="cutoff">Cutoff</label>
           <Knob
+            id="cutoff"
             value={cutoff}
             min={-4.5}
             max={4.5}
@@ -52,8 +53,9 @@ export const FilterSection = ({
         </div>
 
         <div className="synth-control">
-          <label htmlFor="resonance">Emphasis</label>
+          <label htmlFor="emphasis">Emphasis</label>
           <Knob
+            id="emphasis"
             value={resonance}
             min={0}
             max={10}

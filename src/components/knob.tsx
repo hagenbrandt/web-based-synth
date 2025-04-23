@@ -1,4 +1,5 @@
 type KnobProps = {
+  id: string;
   value: number;
   min: number;
   max: number;
@@ -6,13 +7,21 @@ type KnobProps = {
   onChange: (value: number) => void;
 };
 
-export const Knob = ({ value, min, max, step = 1, onChange }: KnobProps) => {
+export const Knob = ({
+  id,
+  value,
+  min,
+  max,
+  step = 1,
+  onChange,
+}: KnobProps) => {
   const percent = (value - min) / (max - min);
   const rotation = percent * 270 - 135;
 
   return (
     <div className="knob-wrapper">
       <input
+        id={id}
         type="range"
         className="knob-input"
         min={min}
