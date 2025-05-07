@@ -1,47 +1,44 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useMidiInput } from '../hooks/useMidiInput';
 import { useMidiActivity } from '../hooks/useMidiActivity';
 
-const WHITE_MIDI_NOTES = [
-  60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79, 81, 83,
-] as const;
-const BLACK_MIDI_NOTES = [61, 63, 66, 68, 70, 73, 75, 78, 80, 82] as const;
-
-type WhiteNote = (typeof WHITE_MIDI_NOTES)[number];
-type BlackNote = (typeof BLACK_MIDI_NOTES)[number];
-export type MidiNote = WhiteNote | BlackNote;
-
-const noteLabels: Record<MidiNote, string> = {
-  60: 'C4',
-  61: 'C#4',
-  62: 'D4',
-  63: 'D#4',
-  64: 'E4',
-  65: 'F4',
-  66: 'F#4',
-  67: 'G4',
-  68: 'G#4',
-  69: 'A4',
-  70: 'A#4',
-  71: 'B4',
-  72: 'C5',
-  73: 'C#5',
-  74: 'D5',
-  75: 'D#5',
-  76: 'E5',
-  77: 'F5',
-  78: 'F#5',
-  79: 'G5',
-  80: 'G#5',
-  81: 'A5',
-  82: 'A#5',
-  83: 'B5',
-};
-
 type PianoKeyboardProps = {
-  readonly onNoteDown?: (note: number) => void;
-  readonly onNoteUp?: (note: number) => void;
+  octaves: number;
+  startNote?: number;
+  onKeyDown?: (note: number) => void;
+  onKeyUp?: (note: number) => void;
+  activeNotes?: Set<number>; // optional for highlighting pressed keys
 };
+
+const WHITE_KEYS = [0, 2, 4, 5, 7, 9, 11];
+
+const NOTE_NAMES = [
+  'C',
+  'C#',
+  'D',
+  'D#',
+  'E',
+  'F',
+  'F#',
+  'G',
+  'G#',
+  'A',
+  'A#',
+  'B',
+];
+
+const SEMITONES_PER_OCTAVE = 12;
+const DEFAULT_NUMBER_OF_OCTAVES = 1;
+const MIDI_NOTE_C4 = 60;
+
+const getNoteName = (midiNote: number) => {
+  const name = NOTE_NAMES[midiNote % SEMITONES_PER_OCTAVE];
+  const octave = Math.floor(midiNote / SEMITONES_PER_OCTAVE) - 1;
+  return `${name}${octave}`;
+};
+
+const isWhiteKey = (midiNote: number) =>
+  WHITE_KEYS.includes(midiNote % SEMITONES_PER_OCTAVE);
 
 const ButtonKeyComponent = ({
   note,
@@ -51,21 +48,21 @@ const ButtonKeyComponent = ({
   onNoteDown,
   onNoteUp,
 }: {
-  readonly note: MidiNote;
+  readonly note: number;
   readonly type: 'white' | 'black';
   readonly active: boolean;
   readonly label: string;
-  readonly onNoteDown: (note: MidiNote) => void;
-  readonly onNoteUp: (note: MidiNote) => void;
+  readonly onNoteDown: (note: number) => void;
+  readonly onNoteUp: (note: number) => void;
 }) => {
-  const handlePointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
-    onNoteUp(note);
-    e.currentTarget.blur();
+  const handleStart = (event: React.SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    onNoteDown(note);
   };
 
-  const handlePointerLeave = (e: React.PointerEvent<HTMLButtonElement>) => {
+  const handleEnd = (event: React.SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     onNoteUp(note);
-    e.currentTarget.blur();
   };
 
   return (
@@ -73,29 +70,40 @@ const ButtonKeyComponent = ({
       className={`synth-key-${type} ${active ? 'active' : ''}`}
       aria-pressed={active}
       aria-label={label}
-      onMouseDown={() => onNoteDown(note)}
-      onMouseUp={() => onNoteUp(note)}
-      onMouseLeave={() => onNoteUp(note)}
-      onPointerUp={handlePointerUp}
-      onPointerLeave={handlePointerLeave}
-      onTouchStart={() => onNoteDown(note)}
-      onTouchEnd={() => onNoteUp(note)}
+      onMouseDown={handleStart}
+      onMouseUp={handleEnd}
+      onMouseLeave={handleEnd}
+      onTouchStart={handleStart}
+      onTouchEnd={handleEnd}
       data-note={note}
     />
   );
 };
 
-export const PianoKeyboard = ({ onNoteDown, onNoteUp }: PianoKeyboardProps) => {
+export const PianoKeyboard = ({
+  onKeyDown,
+  onKeyUp,
+  octaves = DEFAULT_NUMBER_OF_OCTAVES,
+  startNote = MIDI_NOTE_C4,
+}: PianoKeyboardProps) => {
   const [activeNotes, setActiveNotes] = useState<Set<number>>(new Set());
   const { midiActive, triggerMidiActivity } = useMidiActivity();
+
+  const noteRange = useMemo(
+    () =>
+      Array.from(
+        { length: octaves * SEMITONES_PER_OCTAVE },
+        (_, i) => startNote + i
+      ),
+    [octaves, startNote]
+  );
 
   const handleNoteDown = useCallback(
     (note: number) => {
       setActiveNotes((prev) => new Set(prev).add(note));
-
-      onNoteDown?.(note);
+      onKeyDown?.(note);
     },
-    [onNoteDown]
+    [onKeyDown]
   );
 
   const handleNoteUp = useCallback(
@@ -105,23 +113,17 @@ export const PianoKeyboard = ({ onNoteDown, onNoteUp }: PianoKeyboardProps) => {
         copy.delete(note);
         return copy;
       });
-      onNoteUp?.(note);
+      onKeyUp?.(note);
     },
-    [onNoteUp]
+    [onKeyUp]
   );
 
   useMidiInput({
     onNoteDown: handleNoteDown,
     onNoteUp: handleNoteUp,
     onActivity: triggerMidiActivity,
-    range: [...WHITE_MIDI_NOTES, ...BLACK_MIDI_NOTES],
+    range: noteRange,
   });
-
-  const isBlackMidiNote = (
-    note: number
-  ): note is (typeof BLACK_MIDI_NOTES)[number] => {
-    return BLACK_MIDI_NOTES.includes(note as BlackNote);
-  };
 
   return (
     <div className="keyboard-wrapper">
@@ -129,15 +131,13 @@ export const PianoKeyboard = ({ onNoteDown, onNoteUp }: PianoKeyboardProps) => {
         <div className={`midi-indicator ${midiActive ? 'on' : ''}`} />
       </div>
       <div className="synth-keyboard">
-        {WHITE_MIDI_NOTES.map((whiteNote) => {
+        {noteRange.filter(isWhiteKey).map((whiteNote) => {
           const active = activeNotes.has(whiteNote);
-          const label = noteLabels[whiteNote] || `MIDI ${whiteNote}`;
+          const label = getNoteName(whiteNote);
 
-          const hasSharp = [60, 62, 65, 67, 69, 72, 74, 77, 79, 81].includes(
-            whiteNote
-          );
           const blackNote = whiteNote + 1;
-          const showBlack = isBlackMidiNote(blackNote);
+          const showBlack =
+            noteRange.includes(blackNote) && !isWhiteKey(blackNote);
 
           return (
             <div key={whiteNote} className="key-group">
@@ -150,12 +150,12 @@ export const PianoKeyboard = ({ onNoteDown, onNoteUp }: PianoKeyboardProps) => {
                 onNoteUp={handleNoteUp}
               />
 
-              {hasSharp && showBlack ? (
+              {showBlack ? (
                 <ButtonKeyComponent
                   note={blackNote}
                   type="black"
                   active={activeNotes.has(blackNote)}
-                  label={noteLabels[blackNote]}
+                  label={getNoteName(blackNote)}
                   onNoteDown={handleNoteDown}
                   onNoteUp={handleNoteUp}
                 />
