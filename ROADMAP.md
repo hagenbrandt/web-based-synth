@@ -4,13 +4,13 @@
 
 - [x] Synth with Tone.js
 - [x] React UI
-- [ ] MIDI keyboard support
-- [ ] Oscillator with Sawtooth, Triangle, Square and a frequency for fine tuning
-- [ ] Filter Section with Cutoff and Resonance
-- [ ] Envelope ADSR on filter
-- [ ] Output with volume
+- [x] MIDI keyboard support
+- [x] Oscillator with Sawtooth, Triangle, Square and a frequency for fine tuning
+- [x] Filter Section with Cutoff and Emphasis
+- [x] Envelope ADSR on filter
+- [x] Output with volume
 - [ ] Plays samples with chache mechanism for low latency
-- [ ] optional: create visualiztion for signal
+- [x] optional: create visualiztion for signal
 - [ ] optional: create ability to fetch json and make synth modular (eurorack)
 - [ ] Presets + saving
 
