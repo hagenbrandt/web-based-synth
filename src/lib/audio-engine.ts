@@ -1,4 +1,5 @@
 import * as Tone from 'tone';
+import { sampleMap } from './sample-map';
 
 export const oscAnalyser = new Tone.Analyser('waveform', 1024);
 export const outputAnalyser = new Tone.Analyser('waveform', 1024);
@@ -45,3 +46,9 @@ export const stopNote = () => {
 export const setVolume = (value: number) => {
   volume.volume.value = value; // value in dB
 };
+
+export const glockSampler = new Tone.Sampler({
+  urls: sampleMap,
+  release: 1,
+  baseUrl: '', // optional if full URLs are provided
+}).toDestination();
