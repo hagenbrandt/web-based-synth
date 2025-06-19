@@ -1,55 +1,62 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { type MidiNote } from '../components/keyboard';
-
-type UseMidiInputProps = {
-  onNoteDown: (note: MidiNote, velocity?: number) => void;
-  onNoteUp: (note: MidiNote) => void;
-  onActivity?: () => void;
-  range?: number[];
+export type MidiMessage = {
+  note: number;
+  velocity: number;
+  type: 'noteon' | 'noteoff';
 };
 
-export const useMidiInput = ({
-  onNoteDown,
-  onNoteUp,
-  onActivity,
-  range,
-}: UseMidiInputProps) => {
+export const useMidiInput = () => {
+  const [midiMessages, setMidiMessages] = useState<MidiMessage[]>([]);
+  const [midiActive, setMidiActive] = useState(false);
+  const midiActivityTimeout = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
   useEffect(() => {
     if (!navigator.requestMIDIAccess) return;
 
     navigator
       .requestMIDIAccess()
       .then((access) => {
-        for (const input of access.inputs.values()) {
+        access.inputs.forEach((input) => {
           input.onmidimessage = (message) => {
-            if (!message.data) return;
-
-            const [status, note, velocity] = message.data;
+            const [status, note, velocity] = message.data || [];
             const command = status & 0xf0;
-            const isNoteInRange = range ? range.includes(note) : true;
 
-            if (onActivity) {
-              onActivity();
-            }
+            if (note == null || velocity == null) return;
 
-            if (!isNoteInRange) {
-              return;
-            }
+            setMidiActive(true);
+            if (midiActivityTimeout.current)
+              clearTimeout(midiActivityTimeout.current);
+            midiActivityTimeout.current = setTimeout(() => {
+              setMidiActive(false);
+            }, 100);
 
             if (command === 0x90 && velocity > 0) {
-              onNoteDown(note as MidiNote);
+              setMidiMessages((prev) => [
+                ...prev,
+                { note, velocity, type: 'noteon' },
+              ]);
             } else if (
               command === 0x80 ||
               (command === 0x90 && velocity === 0)
             ) {
-              onNoteUp(note as MidiNote);
+              setMidiMessages((prev) => [
+                ...prev,
+                { note, velocity, type: 'noteoff' },
+              ]);
             }
           };
-        }
+        });
       })
       .catch((err) => {
         console.error('Failed to access MIDI devices:', err);
       });
-  }, [onActivity, onNoteDown, onNoteUp, range]);
+  }, []);
+
+  return {
+    midiMessages,
+    midiActive,
+  };
 };
