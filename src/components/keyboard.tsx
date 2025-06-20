@@ -1,13 +1,12 @@
-import { useState, useCallback, useMemo } from 'react';
-import { useMidiInput } from '../hooks/useMidiInput';
-import { useMidiActivity } from '../hooks/useMidiActivity';
+import { useMemo } from 'react';
 
 type PianoKeyboardProps = {
   octaves: number;
   startNote?: number;
   onKeyDown?: (note: number) => void;
   onKeyUp?: (note: number) => void;
-  activeNotes?: Set<number>; // optional for highlighting pressed keys
+  activeNotes?: Set<number>;
+  midiActive?: boolean;
 };
 
 const WHITE_KEYS = [0, 2, 4, 5, 7, 9, 11];
@@ -85,10 +84,9 @@ export const PianoKeyboard = ({
   onKeyUp,
   octaves = DEFAULT_NUMBER_OF_OCTAVES,
   startNote = MIDI_NOTE_C4,
+  activeNotes = new Set(),
+  midiActive = false,
 }: PianoKeyboardProps) => {
-  const [activeNotes, setActiveNotes] = useState<Set<number>>(new Set());
-  const { midiActive, triggerMidiActivity } = useMidiActivity();
-
   const noteRange = useMemo(
     () =>
       Array.from(
@@ -97,33 +95,6 @@ export const PianoKeyboard = ({
       ),
     [octaves, startNote]
   );
-
-  const handleNoteDown = useCallback(
-    (note: number) => {
-      setActiveNotes((prev) => new Set(prev).add(note));
-      onKeyDown?.(note);
-    },
-    [onKeyDown]
-  );
-
-  const handleNoteUp = useCallback(
-    (note: number) => {
-      setActiveNotes((prev) => {
-        const copy = new Set(prev);
-        copy.delete(note);
-        return copy;
-      });
-      onKeyUp?.(note);
-    },
-    [onKeyUp]
-  );
-
-  useMidiInput({
-    onNoteDown: handleNoteDown,
-    onNoteUp: handleNoteUp,
-    onActivity: triggerMidiActivity,
-    range: noteRange,
-  });
 
   return (
     <div className="keyboard-wrapper">
@@ -146,8 +117,8 @@ export const PianoKeyboard = ({
                 type="white"
                 active={active}
                 label={label}
-                onNoteDown={handleNoteDown}
-                onNoteUp={handleNoteUp}
+                onNoteDown={onKeyDown || (() => {})}
+                onNoteUp={onKeyUp || (() => {})}
               />
 
               {showBlack ? (
@@ -156,8 +127,8 @@ export const PianoKeyboard = ({
                   type="black"
                   active={activeNotes.has(blackNote)}
                   label={getNoteName(blackNote)}
-                  onNoteDown={handleNoteDown}
-                  onNoteUp={handleNoteUp}
+                  onNoteDown={onKeyDown || (() => {})}
+                  onNoteUp={onKeyUp || (() => {})}
                 />
               ) : null}
             </div>
